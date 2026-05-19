@@ -1,0 +1,345 @@
+ADD SEQUENCE "NextCustNum"
+  INITIAL 1000
+  INCREMENT 5
+  CYCLE-ON-LIMIT no
+  MIN-VAL 1000
+
+ADD SEQUENCE "NextInvNum"
+  INITIAL 1000
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 1000
+
+ADD SEQUENCE "NextOrdNum"
+  INITIAL 1000
+  INCREMENT 5
+  CYCLE-ON-LIMIT no
+  MIN-VAL 1000
+
+ADD SEQUENCE "NextItemNum"
+  INITIAL 100
+  INCREMENT 10
+  CYCLE-ON-LIMIT no
+  MIN-VAL 100
+
+ADD SEQUENCE "NextRefNum"
+  INITIAL 1
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 1
+
+ADD SEQUENCE "NextVisitor"
+  INITIAL 1000
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 1000
+
+ADD SEQUENCE "NextSupplNum"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 0
+
+ADD SEQUENCE "NextLocalDefNum"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 0
+
+ADD SEQUENCE "NextWareNum"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 0
+
+ADD SEQUENCE "NextBinNum"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 0
+
+ADD SEQUENCE "NextPONum"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 0
+
+ADD SEQUENCE "NextEmpNum"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 0
+
+ADD SEQUENCE "NextInvTransNum"
+  INITIAL 0
+  INCREMENT 1
+  CYCLE-ON-LIMIT no
+  MIN-VAL 0
+
+ADD TABLE "Benefits"
+  AREA "Employee"
+  DESCRIPTION "The benefits table contains employee benefits."
+  DUMP-NAME "benefits"
+
+ADD FIELD "EmpNum" OF "Benefits" AS integer 
+  FORMAT "zzzzzzzzz9"
+  INITIAL "0"
+  LABEL "Emp No"
+  POSITION 2
+  MAX-WIDTH 4
+  VALEXP "CAN-FIND(employee OF benefits)"
+  VALMSG "Employee must exist."
+  HELP "Please enter the Emp Number"
+  ORDER 10
+
+ADD FIELD "HealthCare" OF "Benefits" AS character 
+  FORMAT "x(8)"
+  INITIAL ""
+  LABEL "Health Care"
+  POSITION 3
+  MAX-WIDTH 16
+  HELP "Please enter the Health Care field."
+  LENGTH 0
+  ORDER 20
+
+ADD FIELD "LifeInsurance" OF "Benefits" AS integer 
+  FORMAT "$>>,>>>,>>>"
+  INITIAL "0"
+  LABEL "Life Insurance"
+  POSITION 4
+  MAX-WIDTH 4
+  HELP "Please enter the Life Insurance field."
+  ORDER 30
+
+ADD FIELD "Pension401K" OF "Benefits" AS integer 
+  FORMAT ">>,>>9"
+  INITIAL "0"
+  LABEL "Pension401K"
+  POSITION 5
+  MAX-WIDTH 4
+  HELP "Please enter the 401K field."
+  ORDER 40
+
+ADD FIELD "StockPurchase" OF "Benefits" AS integer 
+  FORMAT ">>,>>9"
+  INITIAL "0"
+  LABEL "Stock Purchase"
+  POSITION 6
+  MAX-WIDTH 4
+  HELP "Please enter the Stock Purchase field."
+  ORDER 50
+
+ADD FIELD "MedicalSpending" OF "Benefits" AS integer 
+  FORMAT ">>,>>9"
+  INITIAL "0"
+  LABEL "Medical Spending"
+  POSITION 7
+  MAX-WIDTH 4
+  HELP "Please enter the Medical Spending field."
+  ORDER 60
+
+ADD FIELD "DependentCare" OF "Benefits" AS integer 
+  FORMAT ">>,>>9"
+  INITIAL "0"
+  LABEL "Dependent Care"
+  POSITION 8
+  MAX-WIDTH 4
+  HELP "Please enter the dependent care field."
+  ORDER 70
+
+ADD INDEX "EmpNo" ON "Benefits" 
+  AREA "Employee"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "EmpNum" ASCENDING 
+
+ADD TABLE "Customer"
+  AREA "Cust_Data"
+  DESCRIPTION "The customer table contains customer information including balance and address."
+  DUMP-NAME "customer"
+
+ADD FIELD "CustNum" OF "Customer" AS integer 
+  FORMAT ">>>>9"
+  INITIAL "0"
+  LABEL "Cust Num"
+  POSITION 2
+  MAX-WIDTH 4
+  VALEXP "custnum > 0"
+  VALMSG "Customer number must be greater than zero"
+  HELP "Please enter a customer number."
+  ORDER 10
+
+ADD FIELD "Name" OF "Customer" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Name"
+  POSITION 3
+  MAX-WIDTH 60
+  HELP "Please enter a name."
+  ORDER 30
+
+ADD FIELD "Address" OF "Customer" AS character 
+  FORMAT "x(35)"
+  INITIAL ""
+  LABEL "Address"
+  POSITION 4
+  MAX-WIDTH 70
+  HELP "Please enter an address."
+  ORDER 40
+
+ADD FIELD "City" OF "Customer" AS character 
+  FORMAT "x(25)"
+  INITIAL ""
+  LABEL "City"
+  POSITION 6
+  MAX-WIDTH 50
+  HELP "Please enter a city."
+  ORDER 60
+
+ADD FIELD "State" OF "Customer" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "State"
+  POSITION 7
+  MAX-WIDTH 40
+  HELP "Please enter standard state abbreviation."
+  ORDER 70
+
+ADD FIELD "Country" OF "Customer" AS character 
+  FORMAT "x(20)"
+  INITIAL "USA"
+  LABEL "Country"
+  POSITION 8
+  MAX-WIDTH 40
+  HELP "Please enter a country."
+  ORDER 15
+
+ADD FIELD "Phone" OF "Customer" AS character 
+  FORMAT "x(20)"
+  INITIAL ""
+  LABEL "Phone"
+  POSITION 9
+  MAX-WIDTH 40
+  HELP "Please enter a phone number"
+  ORDER 115
+
+ADD FIELD "Contact" OF "Customer" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Contact"
+  POSITION 10
+  MAX-WIDTH 60
+  HELP "Please enter a contact."
+  ORDER 110
+
+ADD FIELD "SalesRep" OF "Customer" AS character 
+  FORMAT "x(4)"
+  INITIAL ""
+  LABEL "Sales Rep"
+  POSITION 11
+  MAX-WIDTH 8
+  ORDER 125
+
+ADD FIELD "CreditLimit" OF "Customer" AS decimal 
+  FORMAT "->,>>>,>>9"
+  INITIAL "1500"
+  LABEL "Credit Limit"
+  POSITION 13
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "Balance" OF "Customer" AS decimal 
+  FORMAT "->,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Balance"
+  POSITION 14
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "Terms" OF "Customer" AS character 
+  FORMAT "x(20)"
+  INITIAL "Net30"
+  LABEL "Terms"
+  POSITION 15
+  MAX-WIDTH 40
+  ORDER 150
+
+ADD FIELD "Discount" OF "Customer" AS integer 
+  FORMAT ">>9%"
+  INITIAL "0"
+  LABEL "Discount"
+  POSITION 16
+  MAX-WIDTH 4
+  ORDER 170
+
+ADD FIELD "PostalCode" OF "Customer" AS character 
+  FORMAT "x(10)"
+  INITIAL ""
+  LABEL "Postal Code"
+  POSITION 17
+  MAX-WIDTH 20
+  ORDER 80
+
+ADD FIELD "EmailAddress" OF "Customer" AS character 
+  FORMAT "x(40)"
+  INITIAL ""
+  LABEL "E-mail"
+  POSITION 20
+  MAX-WIDTH 80
+  ORDER 195
+
+ADD INDEX "CustNum" ON "Customer" 
+  AREA "Cust_Data"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "CustNum" ASCENDING 
+
+ADD INDEX "Name" ON "Customer" 
+  AREA "Cust_Data"
+  INDEX-FIELD "Name" ASCENDING 
+
+ADD TABLE "Item"
+  AREA "Inventory"
+  DESCRIPTION "The item table contains inventory item information."
+  DUMP-NAME "item"
+
+ADD FIELD "ItemNum" OF "Item" AS integer 
+  FORMAT "zzzzzzzzz9"
+  INITIAL "0"
+  LABEL "Item Num"
+  POSITION 2
+  MAX-WIDTH 4
+  ORDER 10
+
+ADD FIELD "ItemName" OF "Item" AS character 
+  FORMAT "x(30)"
+  INITIAL ""
+  LABEL "Item Name"
+  POSITION 3
+  MAX-WIDTH 60
+  ORDER 20
+
+ADD FIELD "Price" OF "Item" AS decimal 
+  FORMAT "->,>>>,>>9.99"
+  INITIAL "0"
+  LABEL "Price"
+  POSITION 4
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 30
+
+ADD FIELD "OnHand" OF "Item" AS integer 
+  FORMAT "->>>>9"
+  INITIAL "0"
+  LABEL "On Hand"
+  POSITION 5
+  MAX-WIDTH 4
+  ORDER 40
+
+ADD INDEX "ItemNum" ON "Item" 
+  AREA "Inventory"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "ItemNum" ASCENDING 
