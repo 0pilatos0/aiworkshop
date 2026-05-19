@@ -25,6 +25,9 @@
 /*          This .W file was created with the Progress AppBuilder.      */
 /*----------------------------------------------------------------------*/
 
+USING business.EntityFactory FROM PROPATH.
+USING business.ItemEntity FROM PROPATH.
+
 /* Create an unnamed pool to store all the widgets created 
      by this procedure. This is a good default which assures
      that this procedure's triggers and internal procedures 
@@ -39,6 +42,8 @@ CREATE WIDGET-POOL.
 
 /* Local Variable Definitions ---                                       */
 
+{business/ItemDataset.i}
+
 /* _UIB-CODE-BLOCK-END */
 &ANALYZE-RESUME
 
@@ -52,16 +57,6 @@ CREATE WIDGET-POOL.
 
 /* Name of designated FRAME-NAME and/or first browse and/or first query */
 &Scoped-define FRAME-NAME DEFAULT-FRAME
-
-/* Internal Tables (found by Frame, Query & Browse Queries)             */
-&Scoped-define INTERNAL-TABLES Item
-
-/* Definitions for FRAME DEFAULT-FRAME                                  */
-&Scoped-define QUERY-STRING-DEFAULT-FRAME FOR EACH Item SHARE-LOCK
-&Scoped-define OPEN-QUERY-DEFAULT-FRAME OPEN QUERY DEFAULT-FRAME FOR EACH Item SHARE-LOCK.
-&Scoped-define TABLES-IN-QUERY-DEFAULT-FRAME Item
-&Scoped-define FIRST-TABLE-IN-QUERY-DEFAULT-FRAME Item
-
 
 /* Standard List Definitions                                            */
 &Scoped-Define ENABLED-OBJECTS FILL-IN_ItemNum FILL-IN_Price BUTTON-4 ~
@@ -99,12 +94,6 @@ DEFINE VARIABLE FILL-IN_Price AS DECIMAL FORMAT "->,>>>,>>9.99" INITIAL 0
      LABEL "Price" 
      VIEW-AS FILL-IN 
      SIZE 14 BY 1 NO-UNDO.
-
-/* Query definitions                                                    */
-&ANALYZE-SUSPEND
-DEFINE QUERY DEFAULT-FRAME FOR 
-      Item SCROLLING.
-&ANALYZE-RESUME
 
 /* ************************  Frame Definitions  *********************** */
 
@@ -218,12 +207,20 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BUTTON-3 C-Win
 ON CHOOSE OF BUTTON-3 IN FRAME DEFAULT-FRAME /* Get Item */
 DO:
-  ASSIGN FILL-IN_ItemNum. 
-  FIND FIRST Item WHERE Item.ItemNum = INTEGER(FILL-IN_ItemNum) NO-LOCK NO-ERROR.
-  IF AVAILABLE Item THEN
-  DO:
-     FILL-IN_Price = Item.Price.
-     DISPLAY FILL-IN_Price WITH FRAME {&frame-name}.
+  VAR EntityFactory objFactory    = EntityFactory:GetInstance().
+  VAR ItemEntity    objItemEntity = objFactory:GetItemEntity().
+  VAR LOGICAL       lItemFound.
+
+  ASSIGN FILL-IN_ItemNum.
+
+  lItemFound = objItemEntity:GetItemByNumber(FILL-IN_ItemNum, OUTPUT DATASET dsItem).
+
+  IF lItemFound THEN DO:
+     FIND FIRST ttItem NO-ERROR.
+     IF AVAILABLE ttItem THEN DO:
+        FILL-IN_Price = ttItem.Price.
+        DISPLAY FILL-IN_Price WITH FRAME {&frame-name}.
+     END.
   END.
   ELSE
      MESSAGE 'Item not found' VIEW-AS ALERT-BOX.
@@ -238,24 +235,32 @@ END.
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CONTROL BUTTON-4 C-Win
 ON CHOOSE OF BUTTON-4 IN FRAME DEFAULT-FRAME /* Save */
 DO:
-  VAR DECIMAL dTotal.
-  FIND FIRST Item WHERE Item.ItemNum = INTEGER(FILL-IN_ItemNum) EXCLUSIVE-LOCK NO-ERROR.
-  IF AVAILABLE Item THEN
-  DO:
-     ASSIGN FILL-IN_Price.
-     IF FILL-IN_Price = 0 THEN
-     DO:
-         MESSAGE 'Price cannot be empty' VIEW-AS ALERT-BOX.
-         RETURN NO-APPLY. 
+  VAR EntityFactory objFactory    = EntityFactory:GetInstance().
+  VAR ItemEntity    objItemEntity = objFactory:GetItemEntity().
+  VAR LOGICAL       lItemFound.
+  VAR CHARACTER     cErrorMessage = "".
+  VAR LOGICAL       lValid        = TRUE.
+
+  ASSIGN FILL-IN_ItemNum
+         FILL-IN_Price.
+
+  lItemFound = objItemEntity:GetItemByNumber(FILL-IN_ItemNum, OUTPUT DATASET dsItem).
+
+  IF lItemFound THEN DO:
+     FIND FIRST ttItem NO-ERROR.
+     IF AVAILABLE ttItem THEN DO:
+        TEMP-TABLE ttItem:TRACKING-CHANGES = TRUE.
+        ttItem.Price = FILL-IN_Price.
+
+        lValid = objItemEntity:ValidateItem(DATASET dsItem BY-REFERENCE, OUTPUT cErrorMessage).
+
+        IF lValid THEN
+           objItemEntity:UpdateItem(DATASET dsItem BY-REFERENCE).
+        ELSE DO:
+           MESSAGE cErrorMessage VIEW-AS ALERT-BOX.
+           RETURN NO-APPLY.
+        END.
      END.
-     dTotal = Item.OnHand * FILL-IN_Price.
-     IF dTotal > 6000 THEN
-     DO:
-         MESSAGE 'Total value onhand will be ' dTotal 
-                 ', should not be larger than 6000' VIEW-AS ALERT-BOX.
-         RETURN NO-APPLY.
-     END.
-     Item.Price = FILL-IN_Price.    
   END.
   ELSE
      MESSAGE 'Item not found' VIEW-AS ALERT-BOX.
@@ -331,9 +336,6 @@ PROCEDURE enable_UI :
                These statements here are based on the "Other 
                Settings" section of the widget Property Sheets.
 ------------------------------------------------------------------------------*/
-
-  {&OPEN-QUERY-DEFAULT-FRAME}
-  GET FIRST DEFAULT-FRAME.
   DISPLAY FILL-IN_ItemNum FILL-IN_Price 
       WITH FRAME DEFAULT-FRAME IN WINDOW C-Win.
   ENABLE FILL-IN_ItemNum FILL-IN_Price BUTTON-4 BUTTON-3 
