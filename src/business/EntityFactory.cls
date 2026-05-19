@@ -3,13 +3,14 @@
   Purpose     : Factory for creating singleton instances of business entities
   Syntax      : 
   Description : Implements the Singleton pattern for business entity classes
-  Author(s)   : 
+  Author(s)   : Paul van der lei
   Created     : Tue Apr 15 12:01:20 CEST 2025
   Notes       : 
 ----------------------------------------------------------------------*/
 
 USING Progress.Lang.*.
 USING business.CustomerEntity.
+USING business.ItemEntity.
 USING business.EntityFactory.
 
 BLOCK-LEVEL ON ERROR UNDO, THROW.
@@ -21,6 +22,7 @@ CLASS business.EntityFactory USE-WIDGET-POOL:
     
     /* Singleton instances of business entities */
     VAR PRIVATE CustomerEntity objCustomerEntityInstance.
+    VAR PRIVATE ItemEntity objItemEntityInstance.
     
     /*------------------------------------------------------------------------------
      Purpose: Private constructor to prevent direct instantiation
@@ -51,6 +53,17 @@ CLASS business.EntityFactory USE-WIDGET-POOL:
         
         RETURN objCustomerEntityInstance.
     END METHOD.
+
+    /*------------------------------------------------------------------------------
+     Purpose: Get the singleton instance of ItemEntity
+     Notes:
+    ------------------------------------------------------------------------------*/
+    METHOD PUBLIC ItemEntity GetItemEntity():
+        IF objItemEntityInstance = ? THEN
+            objItemEntityInstance = NEW ItemEntity().
+        
+        RETURN objItemEntityInstance.
+    END METHOD.
         
     /*------------------------------------------------------------------------------
      Purpose: Reset all entity instances (for testing or cleanup)
@@ -59,8 +72,12 @@ CLASS business.EntityFactory USE-WIDGET-POOL:
     METHOD PUBLIC VOID ResetInstances():
         IF VALID-OBJECT(objCustomerEntityInstance) THEN
             DELETE OBJECT objCustomerEntityInstance.
+
+        IF VALID-OBJECT(objItemEntityInstance) THEN
+            DELETE OBJECT objItemEntityInstance.
         
         objCustomerEntityInstance = ?.
+        objItemEntityInstance = ?.    
     END METHOD.
     
 END CLASS.
