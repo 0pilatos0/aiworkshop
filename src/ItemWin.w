@@ -7,9 +7,9 @@
 &ANALYZE-SUSPEND _UIB-CODE-BLOCK _CUSTOM _DEFINITIONS C-Win 
 /*------------------------------------------------------------------------
 
-  File: 
+  File: ItemWin.w
 
-  Description: 
+  Description: Window for retrieving and updating item prices
 
   Input Parameters:
       <none>
@@ -17,9 +17,9 @@
   Output Parameters:
       <none>
 
-  Author: 
+  Author: Paul van der lei
 
-  Created: 
+  Created: Tue May 19 12:15:00 UTC 2026
 
 ------------------------------------------------------------------------*/
 /*          This .W file was created with the Progress AppBuilder.      */

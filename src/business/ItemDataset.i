@@ -1,10 +1,10 @@
 /*------------------------------------------------------------------------
   File        : ItemDataset.i
   Purpose     : Dataset definition for Item entity
-  Syntax      : 
-  Description : 
-  Author(s)   : 
-  Created     : 
+  Syntax      : Included by ItemEntity and ItemWin
+  Description : Defines the Item temp-table and dataset used for data transfer
+  Author(s)   : Paul van der lei
+  Created     : Tue May 19 12:15:00 UTC 2026
   Notes       : 
 ----------------------------------------------------------------------*/
 

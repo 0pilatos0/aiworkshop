@@ -1,10 +1,10 @@
 /*------------------------------------------------------------------------
   File        : ItemEntity
   Purpose     : Business Entity for Item data access
-  Syntax      : 
-  Description : 
-  Author(s)   : 
-  Created     : 
+  Syntax      : business.ItemEntity
+  Description : Encapsulates Item read, update, and validation logic
+  Author(s)   : Paul van der lei
+  Created     : Tue May 19 12:15:00 UTC 2026
   Notes       : 
 ----------------------------------------------------------------------*/
 

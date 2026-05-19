@@ -3,7 +3,7 @@
   Purpose     : Factory for creating singleton instances of business entities
   Syntax      : 
   Description : Implements the Singleton pattern for business entity classes
-  Author(s)   : 
+  Author(s)   : Paul van der lei
   Created     : Tue Apr 15 12:01:20 CEST 2025
   Notes       : 
 ----------------------------------------------------------------------*/
